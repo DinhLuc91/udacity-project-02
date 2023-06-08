@@ -1,0 +1,1 @@
+http://udacity-project-02-dev2.us-east-1.elasticbeanstalk.com/filteredimage?image_url=https://www.applesfromny.com/wp-content/uploads/2020/05/20Ounce_NYAS-Apples2.png
