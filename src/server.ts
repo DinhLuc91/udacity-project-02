@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import { Request, Response } from "express";
 
 (async () => {
 
@@ -41,17 +42,22 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
   }
 
-  app.get("/filteredimage", async (req, res) => {
+  app.get("/filteredimage", async (req:Request, res:Response) => {
     if (!req.query["image_url"]) {
-      res.set(400).send("Image URL is empty!!!");
+      res.status(400).send("Image URL is empty!!!");
     } else if (!isValidImage(req.query["image_url"])) {
-      res.set(422).send("Image URL is invalid!!!");
+      res.status(422).send("Image URL is invalid!!!");
     } else {
-      const filter_image = await filterImageFromURL(req.query["image_url"]);
-      res.status(200).sendFile(filter_image, () => {
-        deleteLocalFiles([filter_image]);
-      });
+      try {
+          const filter_image = await filterImageFromURL(req.query["image_url"]);
+          res.status(200).sendFile(filter_image, () => {
+            deleteLocalFiles([filter_image]);
+          });
     }
+    catch(e){
+        res.status(500).send("Cannot complete API call!!!");
+    }
+    } 
   });
 
   
